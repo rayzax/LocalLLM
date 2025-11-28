@@ -78,9 +78,9 @@ A comprehensive web-based dashboard for interacting with local LLM models runnin
 ### Required
 - **Python**: 3.11 or higher
 - **Node.js**: 20 or higher
-- **Docker**: 24.0 or higher
-- **Docker Compose**: 2.0 or higher
-- **Ollama**: Latest version
+- **Docker**: 24.0 or higher (for containerized deployment)
+- **Docker Compose**: 2.0 or higher (for containerized deployment)
+- **Ollama**: Latest version (running locally on host machine)
 
 ### Optional
 - **GPU**: AMD RX 6650 XT with ROCm support (or NVIDIA with CUDA)
@@ -89,7 +89,51 @@ A comprehensive web-based dashboard for interacting with local LLM models runnin
 
 ## Installation
 
-### Quick Start with Docker Compose (Recommended)
+### Step 1: Install Ollama (Required)
+
+First, install Ollama on your local machine:
+
+**Linux (Arch/Manjaro):**
+```bash
+# Using AUR
+yay -S ollama
+
+# Or using official script
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**Other Linux distributions:**
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+**macOS:**
+```bash
+brew install ollama
+```
+
+**Start Ollama service:**
+```bash
+# Linux (systemd)
+sudo systemctl start ollama
+sudo systemctl enable ollama
+
+# macOS
+ollama serve
+```
+
+**Pull your desired models:**
+```bash
+ollama pull llama3.2:3b
+ollama pull nomic-embed-text
+```
+
+**Verify Ollama is running:**
+```bash
+curl http://localhost:11434/api/tags
+```
+
+### Step 2: Quick Start with Docker Compose (Recommended)
 
 1. **Clone the repository**
 ```bash
@@ -108,18 +152,15 @@ cp backend/.env.example backend/.env
 docker-compose up -d
 ```
 
-4. **Pull your desired Ollama model**
-```bash
-docker exec -it llmlocal-ollama ollama pull llama3.2:3b
-```
-
-5. **Access the application**
+4. **Access the application**
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API Docs: http://localhost:8000/docs
-- Ollama: http://localhost:11434
+- Ollama (local): http://localhost:11434
 
-### Local Development Setup
+### Step 3: Local Development Setup (Alternative to Docker)
+
+**Prerequisites:** Ensure Ollama is installed and running locally (see Step 1)
 
 #### Backend Setup
 
@@ -143,6 +184,7 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
+# Make sure OLLAMA_BASE_URL=http://localhost:11434
 ```
 
 5. **Run the backend**
@@ -203,14 +245,16 @@ EXCLUDED_PATTERNS=node_modules,.git,.cache,__pycache__
 
 ### Ollama Models
 
+Ollama runs locally on your host machine. All models are stored locally in `~/.ollama/models`.
+
 **Recommended models for different use cases:**
 
 - **General Chat**: llama3.2:3b (fast, balanced)
 - **Coding**: codellama:7b, deepseek-coder:6.7b
-- **Embeddings**: nomic-embed-text
+- **Embeddings**: nomic-embed-text (required for RAG features)
 - **Vision**: llava:7b (for screenshot analysis)
 
-**Pull a model:**
+**Pull a model (run on your host machine):**
 ```bash
 ollama pull llama3.2:3b
 ollama pull nomic-embed-text
@@ -219,6 +263,11 @@ ollama pull nomic-embed-text
 **List installed models:**
 ```bash
 ollama list
+```
+
+**Remove a model:**
+```bash
+ollama rm model-name
 ```
 
 ## API Documentation
@@ -278,10 +327,25 @@ LLMLocal/
 **Problem**: "Ollama is not accessible" error
 
 **Solutions**:
-1. Ensure Ollama is running: `systemctl status ollama` (Linux)
+
+**For local development (no Docker):**
+1. Ensure Ollama is running: `systemctl status ollama` (Linux) or check if `ollama serve` is running
 2. Check Ollama is listening: `curl http://localhost:11434/api/tags`
-3. Verify OLLAMA_BASE_URL in .env matches your setup
+3. Verify OLLAMA_BASE_URL in .env is set to `http://localhost:11434`
 4. Check firewall settings
+
+**For Docker deployment:**
+1. Ensure Ollama is running on the host: `systemctl status ollama`
+2. Verify the backend container can reach the host:
+   ```bash
+   docker exec -it llmlocal-backend curl http://host.docker.internal:11434/api/tags
+   ```
+3. If the above fails, check that `extra_hosts` is configured in docker-compose.yml:
+   ```yaml
+   extra_hosts:
+     - "host.docker.internal:host-gateway"
+   ```
+4. Verify backend environment variable: `OLLAMA_BASE_URL=http://host.docker.internal:11434`
 
 ### GPU Not Detected
 
@@ -290,8 +354,17 @@ LLMLocal/
 # Check ROCm installation
 rocm-smi
 
-# Set environment variable
-export HSA_OVERRIDE_GFX_VERSION=10.3.0  # For RX 6650 XT
+# Set environment variable for RX 6650 XT
+export HSA_OVERRIDE_GFX_VERSION=10.3.0
+
+# Make it persistent (add to ~/.bashrc or ~/.zshrc)
+echo 'export HSA_OVERRIDE_GFX_VERSION=10.3.0' >> ~/.bashrc
+
+# Restart Ollama service to pick up the environment variable
+sudo systemctl restart ollama
+
+# Verify GPU is detected by Ollama
+ollama run llama3.2:3b "Hello, world!"
 ```
 
 **For NVIDIA GPUs (CUDA)**:
@@ -299,16 +372,21 @@ export HSA_OVERRIDE_GFX_VERSION=10.3.0  # For RX 6650 XT
 # Check CUDA installation
 nvidia-smi
 
-# Ensure docker has GPU access
-docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
+# Verify Ollama can access GPU
+ollama run llama3.2:3b "Hello, world!"
+# You should see GPU utilization in nvidia-smi
 ```
 
 ### Port Conflicts
 
-If ports 3000, 8000, or 11434 are in use, modify:
-- Frontend port: `docker-compose.yml` → `frontend.ports`
-- Backend port: `docker-compose.yml` → `backend.ports`
-- Ollama port: `docker-compose.yml` → `ollama.ports`
+**For Docker deployment:**
+- Frontend port (3000): Modify `docker-compose.yml` → `frontend.ports`
+- Backend port (8000): Modify `docker-compose.yml` → `backend.ports`
+
+**For local Ollama (port 11434):**
+- Change Ollama port: Edit `/etc/systemd/system/ollama.service` and modify `OLLAMA_HOST`
+- Or run Ollama manually: `OLLAMA_HOST=0.0.0.0:11435 ollama serve`
+- Update `.env` file: `OLLAMA_BASE_URL=http://localhost:11435`
 
 ### Database Errors
 
