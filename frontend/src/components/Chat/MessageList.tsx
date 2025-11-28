@@ -54,19 +54,19 @@ export default function MessageList() {
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code(props) {
+                    const {children, className, ...rest} = props
                     const match = /language-(\w+)/.exec(className || '')
-                    return !inline && match ? (
+                    return match ? (
                       <SyntaxHighlighter
-                        style={vscDarkPlus}
-                        language={match[1]}
+                        {...rest}
                         PreTag="div"
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </SyntaxHighlighter>
+                        children={String(children).replace(/\n$/, '')}
+                        language={match[1]}
+                        style={vscDarkPlus as any}
+                      />
                     ) : (
-                      <code className={className} {...props}>
+                      <code {...rest} className={className}>
                         {children}
                       </code>
                     )
@@ -96,19 +96,19 @@ export default function MessageList() {
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code(props) {
+                    const {children, className, ...rest} = props
                     const match = /language-(\w+)/.exec(className || '')
-                    return !inline && match ? (
+                    return match ? (
                       <SyntaxHighlighter
-                        style={vscDarkPlus}
-                        language={match[1]}
+                        {...rest}
                         PreTag="div"
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </SyntaxHighlighter>
+                        children={String(children).replace(/\n$/, '')}
+                        language={match[1]}
+                        style={vscDarkPlus as any}
+                      />
                     ) : (
-                      <code className={className} {...props}>
+                      <code {...rest} className={className}>
                         {children}
                       </code>
                     )
