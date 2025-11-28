@@ -39,7 +39,9 @@ export default function MessageList() {
       {messages.map((message) => (
         <div
           key={message.id}
-          className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          className={`flex gap-4 ${
+            message.role === 'user' ? 'justify-end' : 'justify-start'
+          }`}
         >
           {message.role === 'assistant' && (
             <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center glow">
@@ -49,9 +51,7 @@ export default function MessageList() {
 
           <div
             className={`max-w-3xl ${
-              message.role === 'user'
-                ? 'message-user'
-                : 'message-assistant'
+              message.role === 'user' ? 'message-user' : 'message-assistant'
             }`}
           >
             <div className="prose prose-invert max-w-none">
@@ -60,6 +60,7 @@ export default function MessageList() {
                   code(props) {
                     const {children, className, node, ref, ...rest} = props
                     const match = /language-(\w+)/.exec(className || '')
+
                     return match ? (
                       <SyntaxHighlighter
                         PreTag="div"
@@ -95,6 +96,7 @@ export default function MessageList() {
           <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center glow animate-pulse">
             <Bot size={20} className="text-white" />
           </div>
+
           <div className="max-w-3xl message-assistant">
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown
@@ -102,6 +104,7 @@ export default function MessageList() {
                   code(props) {
                     const {children, className, node, ref, ...rest} = props
                     const match = /language-(\w+)/.exec(className || '')
+
                     return match ? (
                       <SyntaxHighlighter
                         PreTag="div"
