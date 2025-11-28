@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 from app.config import settings
 from app.utils.logger import configure_logging, get_logger
 from app.database import init_db
-from app.api import chat, settings as settings_api
+from app.api import chat, settings as settings_api, rag
 
 # Configure logging
 configure_logging()
@@ -90,6 +90,7 @@ async def root():
 # Include routers
 app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
 app.include_router(settings_api.router, prefix="/api/settings", tags=["Settings"])
+app.include_router(rag.router, prefix="/api", tags=["RAG"])
 
 
 # Global exception handler

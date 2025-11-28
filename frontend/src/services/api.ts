@@ -152,6 +152,43 @@ class ApiService {
   async deleteSetting(key: string): Promise<void> {
     await this.client.delete(`/settings/${key}`);
   }
+
+  // RAG endpoints
+  async uploadFile(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await this.client.post('/rag/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 120000, // 2 minutes for large files
+    });
+    return response.data;
+  }
+
+  async searchDocuments(query: string, nResults: number = 5, fileIds?: number[]): Promise<any[]> {
+    const response = await this.client.post('/rag/search', {
+      query,
+      n_results: nResults,
+      file_ids: fileIds,
+    });
+    return response.data;
+  }
+
+  async getFiles(): Promise<any[]> {
+    const response = await this.client.get('/rag/files');
+    return response.data;
+  }
+
+  async deleteFile(fileId: number): Promise<void> {
+    await this.client.delete(`/rag/files/${fileId}`);
+  }
+
+  async getRagStats(): Promise<any> {
+    const response = await this.client.get('/rag/stats');
+    return response.data;
+  }
 }
 
 export const api = new ApiService();
