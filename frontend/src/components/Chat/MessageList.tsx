@@ -55,18 +55,18 @@ export default function MessageList() {
               <ReactMarkdown
                 components={{
                   code(props) {
-                    const {children, className, ...rest} = props
+                    const {children, className, node, ref, ...rest} = props
                     const match = /language-(\w+)/.exec(className || '')
                     return match ? (
                       <SyntaxHighlighter
-                        {...rest}
                         PreTag="div"
-                        children={String(children).replace(/\n$/, '')}
                         language={match[1]}
                         style={vscDarkPlus as any}
-                      />
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
                     ) : (
-                      <code {...rest} className={className}>
+                      <code className={className}>
                         {children}
                       </code>
                     )
@@ -97,18 +97,18 @@ export default function MessageList() {
               <ReactMarkdown
                 components={{
                   code(props) {
-                    const {children, className, ...rest} = props
+                    const {children, className, node, ref, ...rest} = props
                     const match = /language-(\w+)/.exec(className || '')
                     return match ? (
                       <SyntaxHighlighter
-                        {...rest}
                         PreTag="div"
-                        children={String(children).replace(/\n$/, '')}
                         language={match[1]}
                         style={vscDarkPlus as any}
-                      />
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
                     ) : (
-                      <code {...rest} className={className}>
+                      <code className={className}>
                         {children}
                       </code>
                     )
