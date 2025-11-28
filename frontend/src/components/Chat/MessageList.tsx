@@ -19,23 +19,6 @@ export default function MessageList() {
 
   return (
     <div className="h-full p-6 space-y-6">
-      {messages.length === 0 && !isStreaming && (
-        <div className="flex items-center justify-center h-full">
-          <div className="text-center text-gray-500">
-            <div className="relative inline-block">
-              <Bot size={64} className="mx-auto mb-4 opacity-30 text-primary-400" />
-              <div className="absolute inset-0 blur-xl bg-primary-500/20 rounded-full"></div>
-            </div>
-            <h2 className="text-2xl font-semibold mb-2 text-gradient">
-              Start a conversation
-            </h2>
-            <p className="text-sm text-gray-400">
-              Type your message below to begin chatting with your AI
-            </p>
-          </div>
-        </div>
-      )}
-
       {messages.map((message) => (
         <div
           key={message.id}
