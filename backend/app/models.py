@@ -36,7 +36,7 @@ class Message(Base):
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     token_count = Column(Integer, default=0)
-    metadata = Column(JSON, default=dict)  # For storing additional data (citations, etc.)
+    extra_metadata = Column(JSON, default=dict)  # For storing additional data (citations, etc.)
 
     # Model parameters (for assistant messages)
     temperature = Column(Float, nullable=True)
