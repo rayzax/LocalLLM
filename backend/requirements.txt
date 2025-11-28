@@ -61,9 +61,6 @@ aiofiles
 # Logging
 structlog
 
-# CORS
-python-cors
-
 # WebSocket
 websockets
 
