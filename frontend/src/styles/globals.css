@@ -9,9 +9,11 @@
 
   body {
     @apply bg-dark-950 text-gray-100 font-mono;
+    background: linear-gradient(135deg, #0a0514 0%, #1e1b4b 50%, #0a0514 100%);
+    background-attachment: fixed;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar styling - Galaxy theme */
   ::-webkit-scrollbar {
     @apply w-2 h-2;
   }
@@ -21,11 +23,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-dark-700 rounded;
+    @apply bg-primary-700 rounded;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-dark-600;
+    @apply bg-primary-600;
   }
 }
 
@@ -36,38 +38,48 @@
 
   .btn-primary {
     @apply btn bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
   }
 
   .btn-secondary {
     @apply btn bg-secondary-500 hover:bg-secondary-600 text-white focus:ring-secondary-400;
+    box-shadow: 0 0 20px rgba(217, 70, 239, 0.3);
   }
 
   .btn-ghost {
-    @apply btn bg-transparent hover:bg-dark-800 text-gray-300 focus:ring-dark-700;
+    @apply btn bg-transparent hover:bg-dark-800 text-gray-300 focus:ring-primary-700;
   }
 
   .input {
-    @apply w-full px-4 py-2 bg-dark-900 border border-dark-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+    @apply w-full px-4 py-2 bg-dark-900/50 border border-primary-700/30 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+    backdrop-filter: blur(10px);
   }
 
   .card {
-    @apply bg-dark-900 border border-dark-800 rounded-lg p-4 shadow-lg;
+    @apply bg-dark-900/40 border border-primary-700/20 rounded-lg p-4 shadow-lg;
+    backdrop-filter: blur(10px);
   }
 
   .message-bubble {
     @apply rounded-lg p-4 mb-4 break-words;
+    backdrop-filter: blur(10px);
   }
 
   .message-user {
-    @apply message-bubble bg-primary-700 text-white;
+    @apply message-bubble text-white;
+    background: linear-gradient(135deg, #c026d3 0%, #a855f7 100%);
+    box-shadow: 0 0 30px rgba(192, 38, 211, 0.3);
   }
 
   .message-assistant {
-    @apply message-bubble bg-dark-800 text-gray-100 border border-dark-700;
+    @apply message-bubble bg-dark-800/60 text-gray-100 border border-primary-700/20;
+    box-shadow: 0 0 20px rgba(126, 34, 206, 0.2);
   }
 
   .sidebar {
-    @apply bg-dark-900 border-r border-dark-800 h-screen overflow-y-auto;
+    @apply border-r border-primary-700/20 h-screen overflow-y-auto;
+    background: linear-gradient(180deg, rgba(10, 5, 20, 0.95) 0%, rgba(30, 27, 75, 0.95) 100%);
+    backdrop-filter: blur(10px);
   }
 
   .main-content {
@@ -77,7 +89,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-400 via-secondary-400 to-cosmic-400 bg-clip-text text-transparent;
   }
 
   .scrollbar-hide {
@@ -87,5 +99,15 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .glass {
+    background: rgba(10, 5, 20, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(126, 34, 206, 0.2);
+  }
+
+  .glow {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
   }
 }

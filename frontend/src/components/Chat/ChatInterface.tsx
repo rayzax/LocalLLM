@@ -3,6 +3,7 @@ import { useChat } from '../../context/ChatContext'
 import MessageList from './MessageList'
 import MessageInput from './MessageInput'
 import ModelSelector from './ModelSelector'
+import { Sparkles } from 'lucide-react'
 
 export default function ChatInterface() {
   const { currentConversation, models } = useChat()
@@ -42,22 +43,25 @@ export default function ChatInterface() {
   }, [])
 
   return (
-    <div className="flex flex-col h-screen bg-dark-950">
+    <div className="flex flex-col h-screen">
       {/* Header */}
-      <div className="border-b border-dark-800 bg-dark-900 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex-1">
-              <h2 className="text-lg font-semibold text-gray-200">
-                {currentConversation ? currentConversation.title : 'New Conversation'}
-              </h2>
-              <p className="text-sm text-gray-500">
+      <div className="flex-shrink-0 glass border-b border-primary-700/20 p-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center justify-between gap-6">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles size={20} className="text-primary-400" />
+                <h2 className="text-lg font-semibold text-gray-200 truncate">
+                  {currentConversation ? currentConversation.title : 'New Conversation'}
+                </h2>
+              </div>
+              <p className="text-sm text-gray-400">
                 {currentConversation
                   ? `${currentConversation.message_count} messages`
                   : 'Start chatting with your local LLM'}
               </p>
             </div>
-            <div className="w-64">
+            <div className="flex-shrink-0 w-72">
               <ModelSelector
                 selectedModel={selectedModel}
                 onModelChange={setSelectedModel}
@@ -67,16 +71,16 @@ export default function ChatInterface() {
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-hidden">
-        <div className="max-w-4xl mx-auto h-full">
+      {/* Messages - This is the scrollable area */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-5xl mx-auto h-full">
           <MessageList />
         </div>
       </div>
 
-      {/* Input */}
-      <div className="border-t border-dark-800">
-        <div className="max-w-4xl mx-auto">
+      {/* Input - Fixed at bottom */}
+      <div className="flex-shrink-0 glass border-t border-primary-700/20">
+        <div className="max-w-5xl mx-auto">
           <MessageInput
             selectedModel={selectedModel}
             temperature={temperature}
