@@ -18,16 +18,19 @@ export default function MessageList() {
   }, [messages, streamingMessage])
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+    <div className="h-full p-6 space-y-6">
       {messages.length === 0 && !isStreaming && (
         <div className="flex items-center justify-center h-full">
           <div className="text-center text-gray-500">
-            <Bot size={64} className="mx-auto mb-4 opacity-30" />
-            <h2 className="text-2xl font-semibold mb-2 text-gray-400">
+            <div className="relative inline-block">
+              <Bot size={64} className="mx-auto mb-4 opacity-30 text-primary-400" />
+              <div className="absolute inset-0 blur-xl bg-primary-500/20 rounded-full"></div>
+            </div>
+            <h2 className="text-2xl font-semibold mb-2 text-gradient">
               Start a conversation
             </h2>
-            <p className="text-sm">
-              Type your message below to begin chatting with the AI
+            <p className="text-sm text-gray-400">
+              Type your message below to begin chatting with your AI
             </p>
           </div>
         </div>
@@ -39,8 +42,8 @@ export default function MessageList() {
           className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
         >
           {message.role === 'assistant' && (
-            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
-              <Bot size={18} className="text-white" />
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center glow">
+              <Bot size={20} className="text-white" />
             </div>
           )}
 
@@ -79,8 +82,8 @@ export default function MessageList() {
           </div>
 
           {message.role === 'user' && (
-            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-secondary-500 flex items-center justify-center">
-              <User size={18} className="text-white" />
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-secondary-500 to-secondary-700 flex items-center justify-center glow">
+              <User size={20} className="text-white" />
             </div>
           )}
         </div>
@@ -89,8 +92,8 @@ export default function MessageList() {
       {/* Streaming Message */}
       {isStreaming && streamingMessage && (
         <div className="flex gap-4 justify-start">
-          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
-            <Bot size={18} className="text-white" />
+          <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center glow animate-pulse">
+            <Bot size={20} className="text-white" />
           </div>
           <div className="max-w-3xl message-assistant">
             <div className="prose prose-invert max-w-none">
@@ -118,7 +121,7 @@ export default function MessageList() {
                 {streamingMessage}
               </ReactMarkdown>
             </div>
-            <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+            <div className="flex items-center gap-2 mt-2 text-xs text-primary-400">
               <Loader2 size={12} className="animate-spin" />
               <span>Generating...</span>
             </div>
