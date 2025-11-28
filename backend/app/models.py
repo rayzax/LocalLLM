@@ -64,6 +64,21 @@ class IndexedFile(Base):
     error_message = Column(Text, nullable=True)
 
 
+class File(Base):
+    """Model for uploaded RAG documents."""
+
+    __tablename__ = "files"
+
+    id = Column(Integer, primary_key=True, index=True)
+    filename = Column(String(255), nullable=False)
+    file_type = Column(String(50), nullable=False)
+    file_size = Column(Integer, nullable=False)  # Size in bytes
+    file_path = Column(String(1024), nullable=False)
+    indexed = Column(Boolean, default=False)
+    chunks_count = Column(Integer, default=0)
+    uploaded_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
 class AppSettings(Base):
     """Application settings stored in database."""
 
