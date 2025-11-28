@@ -36,7 +36,9 @@ export default function MessageList() {
       {messages.map((message) => (
         <div
           key={message.id}
-          className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          className={`flex gap-4 ${
+            message.role === 'user' ? 'justify-end' : 'justify-start'
+          }`}
         >
           {message.role === 'assistant' && (
             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
@@ -46,25 +48,25 @@ export default function MessageList() {
 
           <div
             className={`max-w-3xl ${
-              message.role === 'user'
-                ? 'message-user'
-                : 'message-assistant'
+              message.role === 'user' ? 'message-user' : 'message-assistant'
             }`}
           >
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown
                 components={{
                   code(props) {
-                    const {children, className, ...rest} = props
+                    const { children, className, ref, ...rest } = props
                     const match = /language-(\w+)/.exec(className || '')
+
                     return match ? (
                       <SyntaxHighlighter
                         {...rest}
                         PreTag="div"
-                        children={String(children).replace(/\n$/, '')}
                         language={match[1]}
                         style={vscDarkPlus as any}
-                      />
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
                     ) : (
                       <code {...rest} className={className}>
                         {children}
@@ -92,21 +94,24 @@ export default function MessageList() {
           <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
             <Bot size={18} className="text-white" />
           </div>
+
           <div className="max-w-3xl message-assistant">
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown
                 components={{
                   code(props) {
-                    const {children, className, ...rest} = props
+                    const { children, className, ref, ...rest } = props
                     const match = /language-(\w+)/.exec(className || '')
+
                     return match ? (
                       <SyntaxHighlighter
                         {...rest}
                         PreTag="div"
-                        children={String(children).replace(/\n$/, '')}
                         language={match[1]}
                         style={vscDarkPlus as any}
-                      />
+                      >
+                        {String(children).replace(/\n$/, '')}
+                      </SyntaxHighlighter>
                     ) : (
                       <code {...rest} className={className}>
                         {children}
@@ -118,6 +123,7 @@ export default function MessageList() {
                 {streamingMessage}
               </ReactMarkdown>
             </div>
+
             <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
               <Loader2 size={12} className="animate-spin" />
               <span>Generating...</span>
